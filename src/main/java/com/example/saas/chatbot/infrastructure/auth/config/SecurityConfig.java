@@ -1,4 +1,4 @@
-package com.example.saas.chatbot.infrastructure.config;
+package com.example.saas.chatbot.infrastructure.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
-package com.example.saas.chatbot.infrastructure.adapter.out;
+package com.example.saas.chatbot.infrastructure.auth.adapter.out;
 
-import com.example.saas.chatbot.domain.model.Role;
+import com.example.saas.chatbot.domain.auth.model.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

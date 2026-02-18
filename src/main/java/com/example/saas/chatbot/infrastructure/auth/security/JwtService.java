@@ -1,6 +1,6 @@
-package com.example.saas.chatbot.infrastructure.security;
+package com.example.saas.chatbot.infrastructure.auth.security;
 
-import com.example.saas.chatbot.domain.model.User;
+import com.example.saas.chatbot.domain.auth.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

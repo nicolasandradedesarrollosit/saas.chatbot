@@ -1,7 +1,7 @@
-package com.example.saas.chatbot.infrastructure.adapter.in;
+package com.example.saas.chatbot.infrastructure.auth.adapter.in;
 
-import com.example.saas.chatbot.domain.model.User;
-import com.example.saas.chatbot.domain.port.in.AuthUseCase;
+import com.example.saas.chatbot.domain.auth.model.User;
+import com.example.saas.chatbot.domain.auth.port.in.AuthUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

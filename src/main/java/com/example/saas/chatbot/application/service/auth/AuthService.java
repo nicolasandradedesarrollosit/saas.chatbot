@@ -1,10 +1,10 @@
-package com.example.saas.chatbot.application.service;
+package com.example.saas.chatbot.application.service.auth;
 
-import com.example.saas.chatbot.domain.model.Role;
-import com.example.saas.chatbot.domain.model.User;
-import com.example.saas.chatbot.domain.port.in.AuthUseCase;
-import com.example.saas.chatbot.domain.port.out.UserRepositoryPort;
-import com.example.saas.chatbot.infrastructure.security.JwtService;
+import com.example.saas.chatbot.domain.auth.model.Role;
+import com.example.saas.chatbot.domain.auth.model.User;
+import com.example.saas.chatbot.domain.auth.port.in.AuthUseCase;
+import com.example.saas.chatbot.domain.auth.port.out.UserRepositoryPort;
+import com.example.saas.chatbot.infrastructure.auth.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

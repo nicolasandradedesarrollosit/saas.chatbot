@@ -1,8 +1,7 @@
-package com.example.saas.chatbot.infrastructure.adapter.out;
+package com.example.saas.chatbot.infrastructure.auth.adapter.out;
 
-import com.example.saas.chatbot.domain.model.Role;
-import com.example.saas.chatbot.domain.model.User;
-import com.example.saas.chatbot.domain.port.out.UserRepositoryPort;
+import com.example.saas.chatbot.domain.auth.model.User;
+import com.example.saas.chatbot.domain.auth.port.out.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

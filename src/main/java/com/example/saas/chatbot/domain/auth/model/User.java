@@ -1,4 +1,4 @@
-package com.example.saas.chatbot.domain.model;
+package com.example.saas.chatbot.domain.auth.model;
 
 import lombok.Builder;
 import lombok.Getter;

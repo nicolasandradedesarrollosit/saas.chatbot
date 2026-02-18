@@ -1,4 +1,4 @@
-package com.example.saas.chatbot.infrastructure.adapter.out;
+package com.example.saas.chatbot.infrastructure.auth.adapter.out;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
