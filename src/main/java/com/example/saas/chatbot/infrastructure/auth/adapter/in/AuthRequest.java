@@ -1,3 +1,5 @@
 package com.example.saas.chatbot.infrastructure.auth.adapter.in;
 
-public record AuthRequest(String email, String password) {}
+public class AuthRequest {
+    public record RequestRegisterAndLogin(String email, String password) {}
+}
