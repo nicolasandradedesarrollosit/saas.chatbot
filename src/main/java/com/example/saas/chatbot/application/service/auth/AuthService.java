@@ -1,5 +1,8 @@
 package com.example.saas.chatbot.application.service.auth;
 
+import com.example.saas.chatbot.domain.auth.exception.InvalidCredentialsException;
+import com.example.saas.chatbot.domain.auth.exception.InvalidTokenException;
+import com.example.saas.chatbot.domain.auth.exception.UserAlreadyExistsException;
 import com.example.saas.chatbot.domain.auth.model.AuthToken;
 import com.example.saas.chatbot.domain.auth.model.RefreshToken;
 import com.example.saas.chatbot.domain.auth.model.Role;
@@ -37,10 +40,10 @@ public class AuthService implements AuthUseCase {
     @Override
     public AuthToken login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
+            throw new InvalidCredentialsException();
         }
 
         String accessToken = tokenProvider.generateAccessToken(user);
@@ -59,7 +62,7 @@ public class AuthService implements AuthUseCase {
     @Override
     public User register(String email, String password) {
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("El email ya está registrado");
+            throw new UserAlreadyExistsException(email);
         }
 
         User newUser = User.builder()
@@ -86,14 +89,14 @@ public class AuthService implements AuthUseCase {
     @Override
     public AuthToken refresh(String refreshToken) {
         RefreshToken stored = refreshTokenRepository.findByToken(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Refresh token no encontrado"));
+                .orElseThrow(() -> new InvalidTokenException("Refresh token not found"));
 
         if (!stored.isValid()) {
-            throw new RuntimeException("Refresh token inválido o expirado");
+            throw new InvalidTokenException("Refresh token is invalid or expired");
         }
 
         User user = userRepository.findByEmail(stored.getUserEmail())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         refreshTokenRepository.revokeAllByUserEmail(user.getEmail());
 

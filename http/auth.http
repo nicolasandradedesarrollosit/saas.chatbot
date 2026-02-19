@@ -1,0 +1,186 @@
+@host = http://localhost:8080
+@email = testuser@example.com
+@password = securePassword123
+
+###################################################################
+# REGISTER
+###################################################################
+
+# Should register a new user successfully and return 201
+# Expected: status 201, title "User Registered"
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###
+
+# Should fail registration with invalid email format
+# Expected: status 400, title "Validation Failed", fieldErrors with "email"
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "not-an-email",
+  "password": "{{password}}"
+}
+
+###
+
+# Should fail registration with short password (less than 8 characters)
+# Expected: status 400, title "Validation Failed", fieldErrors with "password"
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "short@example.com",
+  "password": "123"
+}
+
+###
+
+# Should fail registration with empty email and password
+# Expected: status 400, title "Validation Failed", fieldErrors with both "email" and "password"
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": ""
+}
+
+###
+
+# Should fail registration with missing body fields
+# Expected: status 400, title "Validation Failed"
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{}
+
+###
+
+# Should fail registration when email already exists (run after successful register)
+# Expected: status 409, title "Registration Failed", type "auth/user-already-exists"
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###################################################################
+# LOGIN
+###################################################################
+
+###
+
+# Should login successfully and set access_token and refresh_token cookies
+# Expected: status 200, title "Login Successful", Set-Cookie headers present
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###
+
+# Should fail login with wrong password
+# Expected: status 401, title "Authentication Failed", type "auth/invalid-credentials"
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "wrongPassword123"
+}
+
+###
+
+# Should fail login with non-existent email
+# Expected: status 401, title "Authentication Failed", type "auth/invalid-credentials"
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "nonexistent@example.com",
+  "password": "{{password}}"
+}
+
+###
+
+# Should fail login with invalid email format
+# Expected: status 400, title "Validation Failed", fieldErrors with "email"
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "bad-email",
+  "password": "{{password}}"
+}
+
+###
+
+# Should fail login with empty body
+# Expected: status 400, title "Validation Failed", fieldErrors with "email" and "password"
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": ""
+}
+
+###################################################################
+# LOGOUT
+###################################################################
+
+###
+
+# Should fail logout without authentication (no token)
+# Expected: status 401 or 403, request is rejected by the security filter
+POST {{host}}/api/auth/logout
+Content-Type: application/json
+
+###
+
+# Should logout successfully with valid access token
+# Expected: status 200, title "Logout Successful", Set-Cookie clears both cookies
+# NOTE: Replace <ACCESS_TOKEN> with a valid token from a login response cookie
+POST {{host}}/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer <ACCESS_TOKEN>
+
+###################################################################
+# PROTECTED ENDPOINT
+###################################################################
+
+###
+
+# Should reject access to any protected endpoint without a token
+# Expected: status 401 or 403, no authentication context set
+GET {{host}}/api/protected/test
+Content-Type: application/json
+
+###
+
+# Should reject access with an invalid/malformed token
+# Expected: status 401 or 403, token validation fails in the filter
+GET {{host}}/api/protected/test
+Content-Type: application/json
+Authorization: Bearer invalid.token.here
+
+###
+
+# Should reject access with a blacklisted token (use a token, then logout, then reuse it)
+# Expected: status 401 or 403, token is in the blacklist
+# NOTE: Replace <BLACKLISTED_TOKEN> with a token that was used before logout
+GET {{host}}/api/protected/test
+Content-Type: application/json
+Authorization: Bearer <BLACKLISTED_TOKEN>

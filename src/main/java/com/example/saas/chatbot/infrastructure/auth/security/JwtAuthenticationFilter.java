@@ -45,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (refreshToken != null) {
                     try {
                         AuthToken newTokens = authUseCase.refresh(refreshToken);
+                        CookieUtil.addAccessTokenCookie(response, newTokens.getAccessToken());
                         CookieUtil.addRefreshTokenCookie(response, newTokens.getRefreshToken());
                         response.setHeader("X-New-Access-Token", newTokens.getAccessToken());
                         setAuthentication(newTokens.getAccessToken(), request);
@@ -63,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             return header.substring(7);
         }
-        return null;
+        return CookieUtil.extractAccessTokenFromCookies(request.getCookies());
     }
 
     private void setAuthentication(String token, HttpServletRequest request) {
